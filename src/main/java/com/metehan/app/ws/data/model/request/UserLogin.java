@@ -1,6 +1,6 @@
-package com.metehan.app.ws.ui.model;
+package com.metehan.app.ws.data.model.request;
 
-public class UserLoginRequestModel {
+public class UserLogin {
 
 	private String email;
 	private String password;

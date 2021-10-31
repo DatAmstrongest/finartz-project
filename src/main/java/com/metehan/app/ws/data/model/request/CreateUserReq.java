@@ -1,9 +1,9 @@
-package com.metehan.app.ws.ui.model;
+package com.metehan.app.ws.data.model.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class CreateUserRequestModel {
+public class CreateUserReq {
 	
 	@NotNull(message="First name cannot be null")
 	@Size(min=2, message="First name must not be less than two characters")
@@ -17,22 +17,22 @@ public class CreateUserRequestModel {
 	@Size(min=8, max=16, message="Password must be equal or greater than 8 characters and less than 16 characters" )
 	private String password;
 	
+	@NotNull(message="Email cannot be null")
+	@Email
+	private String email;
+	
+	@NotNull(message="Address cannot be null")
+	private String address;
+	
+	private String userId;
+	
+	
 	public String getAddress() {
 		return address;
 	}
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	@NotNull(message="Email cannot be null")
-	@Email
-	private String email;
-	
-	@NotNull(message="Email cannot be null")
-	private String address;
-	
-	private String userId;
-	
-	
 	
 	public String getPassword() {
 		return password;

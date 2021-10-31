@@ -18,9 +18,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.metehan.app.ws.data.model.request.UserLogin;
 import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.UserDto;
-import com.metehan.app.ws.ui.model.UserLoginRequestModel;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,7 +43,7 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 			throws AuthenticationException {
 		
 		try {
-			UserLoginRequestModel creds = new ObjectMapper().readValue(req.getInputStream(),UserLoginRequestModel.class);
+			UserLogin creds = new ObjectMapper().readValue(req.getInputStream(),UserLogin.class);
 			return getAuthenticationManager().authenticate(
 					new UsernamePasswordAuthenticationToken(
 							creds.getEmail(),

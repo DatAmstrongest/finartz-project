@@ -2,11 +2,15 @@ package com.metehan.app.ws.shared;
 
 import java.io.Serializable;
 
+import com.metehan.app.ws.data.model.entity.UserEntity.Role;
+
+
 public class UserDto implements Serializable {
 	
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = -5619898394497158418L;
 	private String firstName;
 	private String lastName;
@@ -15,6 +19,14 @@ public class UserDto implements Serializable {
 	private String password;
 	private String userId;
 	private String encryptedPassword;
+	private Role  userRole;
+	
+	public Role getUserRole() {
+		return userRole;
+	}
+	public void setUserRole(Role userRole) {
+		this.userRole = userRole;
+	}
 	public String getFirstName() {
 		return firstName;
 	}

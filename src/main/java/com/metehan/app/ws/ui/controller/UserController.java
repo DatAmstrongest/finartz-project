@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.metehan.app.ws.data.model.request.CreateUserReq;
+import com.metehan.app.ws.data.model.response.CreateUserRes;
 import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.UserDto;
-import com.metehan.app.ws.ui.model.CreateUserRequestModel;
-import com.metehan.app.ws.ui.model.CreateUserResponseModel;
 
 
 
@@ -38,7 +38,7 @@ public class UserController {
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
 			
 			)
-	public ResponseEntity<CreateUserResponseModel> createUser(@Valid @RequestBody CreateUserRequestModel userDetails) {
+	public ResponseEntity<CreateUserRes> createUser(@Valid @RequestBody CreateUserReq userDetails) {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
@@ -47,7 +47,7 @@ public class UserController {
 		
 		UserDto createdUser = usersService.createUser(userDto);
 		
-		CreateUserResponseModel returnValue = modelMapper.map(createdUser, CreateUserResponseModel.class);
+		CreateUserRes returnValue = modelMapper.map(createdUser, CreateUserRes.class);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
 	}

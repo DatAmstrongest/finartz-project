@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.metehan.app.ws.service.UsersService;
 @Configuration
 @EnableWebSecurity
-@Order(1)
 public class UserWebSecurity extends WebSecurityConfigurerAdapter {
 	
 	private Environment environment;

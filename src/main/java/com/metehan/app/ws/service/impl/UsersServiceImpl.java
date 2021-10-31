@@ -1,5 +1,6 @@
 package com.metehan.app.ws.service.impl;
 import java.util.ArrayList;
+import com.metehan.app.ws.data.model.entity.UserEntity.Role;
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -10,10 +11,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.metehan.app.ws.data.UserEntity;
 import com.metehan.app.ws.data.UsersRepository;
+import com.metehan.app.ws.data.model.entity.UserEntity;
 import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.UserDto;
+
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -32,6 +34,7 @@ public class UsersServiceImpl implements UsersService {
 	public UserDto createUser(UserDto userDetails) {
 		userDetails.setUserId(UUID.randomUUID().toString());
 		userDetails.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetails.getPassword()));
+		userDetails.setUserRole(Role.USER);
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		

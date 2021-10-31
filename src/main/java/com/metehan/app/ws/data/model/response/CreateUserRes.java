@@ -1,13 +1,22 @@
-package com.metehan.app.ws.ui.model;
+package com.metehan.app.ws.data.model.response;
 
-public class CreateUserResponseModel {
+import com.metehan.app.ws.data.model.entity.UserEntity.Role;
+
+public class CreateUserRes {
 	
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String address;
 	private String userId;
+	private Role userRole;
 	
+	public Role getUserRole() {
+		return userRole;
+	}
+	public void setUserRole(Role userRole) {
+		this.userRole = userRole;
+	}
 	public String getFirstName() {
 		return firstName;
 	}
