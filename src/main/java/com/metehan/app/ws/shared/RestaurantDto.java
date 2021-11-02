@@ -7,6 +7,7 @@ import java.util.Set;
 import com.metehan.app.ws.data.model.entity.CommentEntity;
 import com.metehan.app.ws.data.model.entity.MenuEntity;
 import com.metehan.app.ws.data.model.entity.RestaurantEntity.State;
+import com.metehan.app.ws.data.model.entity.UserEntity;
 
 public class RestaurantDto {
 	
@@ -19,8 +20,18 @@ public class RestaurantDto {
 	private State status;
 	
 	private MenuEntity menu;
+	
+	private UserEntity user;
 
     private Set<CommentEntity> comments;
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
 
 	public String getRestaurantName() {
 		return restaurantName;

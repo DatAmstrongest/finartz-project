@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,9 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	
 	private UsersService usersService;
 	private Environment environment;
+	
+	@Autowired
+	private JwtUtil jwtTokenUtil;
 	
 	public UserAuthenticationFilter(UsersService usersService, Environment environment, AuthenticationManager authenticationManager )
 	{
@@ -67,10 +71,10 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		UserDto userDetails = usersService.getUserDetailsByEmail(userName);
 		
 		String token = Jwts.builder()
-				.setSubject(userDetails.getUserId())
-				.setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time"))))
-	           	.signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
-	           	.compact();
+                .setSubject(userDetails.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time"))))
+                .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret") )
+                .compact();
 		res.addHeader("token", token);
 		res.addHeader("userId",  userDetails.getUserId());
 	}	
