@@ -7,5 +7,6 @@ import com.metehan.app.ws.shared.UserDto;
 public interface UsersService extends UserDetailsService {
 	UserDto createUser(UserDto userDetails);
 	UserDto getUserDetailsByEmail(String email);
+	UserDto login(UserDto userDetails);
 
 }

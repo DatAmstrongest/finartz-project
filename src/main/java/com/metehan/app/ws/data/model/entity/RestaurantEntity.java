@@ -63,6 +63,15 @@ public class RestaurantEntity implements Serializable {
     private UserEntity user;
 	
 
+	
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
 	public Set<CommentEntity> getComments() {
 		return comments;
 	}

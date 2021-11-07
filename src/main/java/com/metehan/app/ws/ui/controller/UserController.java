@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.metehan.app.ws.data.model.request.CreateUserReq;
+import com.metehan.app.ws.data.model.request.UserLogin;
 import com.metehan.app.ws.data.model.response.CreateUserRes;
 import com.metehan.app.ws.service.UsersService;
+import com.metehan.app.ws.shared.RestaurantDto;
 import com.metehan.app.ws.shared.UserDto;
 
 
-
+@SpringBootApplication
 @RestController
 @RequestMapping("users")
 public class UserController {
@@ -52,10 +55,27 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
 	}
 	
+	@PostMapping(
+			path="login",
+			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+			)
+	public String loginUser(@Valid @RequestBody UserLogin userDetails) {
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+		UserDto loggedUser = usersService.login(userDto);
+		if(loggedUser==null) {
+			return "There is no user with given name";
+		}
+		return "Login successful";
+	}
+	
 	@PutMapping
 	public String updateUser()
 	{
-		return "update user was called";
+		return "safds";
 		
 	}
 	

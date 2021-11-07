@@ -5,13 +5,17 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.metehan.app.ws.data.model.request.CreateRestaurantReq;
@@ -23,44 +27,52 @@ import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.RestaurantDto;
 import com.metehan.app.ws.shared.UserDto;
 
+@SpringBootApplication
 @RestController
-@RequestMapping("restaurant")
+@RequestMapping("/restaurant")
 public class RestaurantController {
 	
 	@Autowired
 	RestaurantService restaurantService;
 	
 
-	
 	@PostMapping(
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
 			
 			)
-	public ResponseEntity<CreateRestaurantRes> createRestaurant(@Valid @RequestBody CreateRestaurantReq restaurantDetails) {
+	public ResponseEntity<CreateRestaurantRes> createRestaurant(@RequestParam(value="userId") String userId ,@Valid @RequestBody CreateRestaurantReq restaurantDetails ) {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		
 		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
 		
-		RestaurantDto createdRestaurant = restaurantService.createRestaurant(restaurantDto);
+		RestaurantDto createdRestaurant = restaurantService.createRestaurant(restaurantDto, userId);
 		
 		CreateRestaurantRes returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes.class);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
 	}
 	
+	
 	@PutMapping
 	public String updateRestaurant()
 	{
 		
-		return "update user was called";
+		return "ufsdfadsfasd";
 		
 	}
 	
-	public String deleteRestaurant() {
-		return "delete user was called";
+	
+	@DeleteMapping()
+	public String deleteRestaurant(@RequestParam(value="userId") String userId, @RequestParam(value="restaurantName") String restaurantName) {
+		
+		if(restaurantService.deleteRestaurant(userId, restaurantName)) {
+			return "Restaurant with name " + restaurantName+" deleted";
+		}
+		
+		return "Unsuccessful operation";
 	}
 
 }

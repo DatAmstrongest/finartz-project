@@ -1,6 +1,8 @@
 package com.metehan.app.ws.service.impl;
 import java.util.ArrayList;
 import com.metehan.app.ws.data.model.entity.UserEntity.Role;
+import com.metehan.app.ws.data.model.request.UserLogin;
+
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -63,6 +65,26 @@ public class UsersServiceImpl implements UsersService {
 		if(userEntity == null) throw new UsernameNotFoundException(email);
 		return new ModelMapper().map(userEntity, UserDto.class);
 	}
+	
+	@Override
+	public UserDto login(UserDto userDetails) {
+		
+		
+		String userEmail = userDetails.getEmail();
+		UserEntity user = usersRepository.findByEmail(userEmail);
+		if(bCryptPasswordEncoder.matches(userDetails.getPassword(), user.getEncryptedPassword())) {
+			return new ModelMapper().map(user, UserDto.class);
+		}
+		
+		return null;
+	}
+	
+
+
+	
+
+	
+	
 	
 	
 	
