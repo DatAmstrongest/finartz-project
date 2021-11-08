@@ -3,19 +3,20 @@ package com.metehan.app.ws.data.model.request;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class CreateRestaurantReq {
+import com.metehan.app.ws.data.model.entity.MenuEntity;
+import com.metehan.app.ws.data.model.entity.RestaurantEntity.State;
+
+public class UpdateRestaurantReq {
 	
-	@NotNull(message="Restaurant name cannot be null")
-	@Size(min=2, max=100, message="Restaurant name must not be less than two characters")
+	@Size(min=2, message="Restaurant name must not be less than two characters")
 	private String restaurantName;
 	
-	
-	@NotNull(message="Address cannot be null")
 	@Size(min=2, max=300, message="Restaurant address must not be less than two characters")
 	private String address;
 	
+	private State status;
 	
-	private String restaurantId;
+	
 
 
 	public String getRestaurantName() {
@@ -38,17 +39,17 @@ public class CreateRestaurantReq {
 	}
 
 
-	public String getRestaurantId() {
-		return restaurantId;
+	public State getStatus() {
+		return status;
 	}
 
 
-	public void setRestaurantId(String restaurantId) {
-		this.restaurantId = restaurantId;
+	public void setStatus(State status) {
+		this.status = status;
 	}
 	
 	
 	
-	
+
 
 }

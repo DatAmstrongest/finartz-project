@@ -1,5 +1,6 @@
 package com.metehan.app.ws.service.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -69,22 +70,86 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return returnValue;
 	}
 
-
+	@Override
+	public boolean deleteAllRestaurants(String userId) {
+		
+		UserEntity user = userRepository.findByUserId(userId);
+		RestaurantEntity[] restaurants= restaurantRepository.findByUserId(user.getId());
+		
+		if(restaurants == null) {
+			return false;
+		}
+		else {
+			for(int i=0; i<restaurants.length; i++) {
+				
+				restaurantRepository.delete(restaurants[i]);
+			
+			}
+			return true;
+			
+		}
+		
+		
+		    
+		    
+		
+	}
+	
 	@Override
 	public boolean deleteRestaurant(String userId, String restaurantName) {
 		
 		UserEntity user = userRepository.findByUserId(userId);
 
-		RestaurantEntity restaurant = restaurantRepository.findByUserId(user.getId());
-		if(restaurant.getRestaurantName().equals(restaurantName)) {
-			System.out.println("Merhaba");
-			restaurantRepository.delete(restaurant);
-			return true;
-			
+		RestaurantEntity[] restaurant = restaurantRepository.findByUserId(user.getId());
+		for(int i=0; i<restaurant.length; i++) {
+			if(restaurant[i].getRestaurantName().equals(restaurantName)) {
+				return true;
+			}
 		}
 		
 		return false;
 	}
+
+
+	@Override
+	public RestaurantDto updateRestaurant(RestaurantDto restaurantDetails, String userId, String restaurantName) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		
+		UserEntity user = userRepository.findByUserId(userId);
+		if(user==null) {
+			throw new UsernameNotFoundException(userId);
+		}
+		
+		RestaurantEntity[] restaurant = restaurantRepository.findByUserId(user.getId());
+		for(int i=0; i<restaurant.length; i++) {
+			if(restaurant[i].getRestaurantName().equals(restaurantName)) {
+				System.out.println("Hello");
+				if(restaurantDetails.getAddress()!=null) {
+					restaurant[i].setAddress(restaurantDetails.getAddress());
+				}
+				
+				if(restaurantDetails.getRestaurantName()!=null) {
+					restaurant[i].setRestaurantName(restaurantDetails.getRestaurantName());
+				}
+				
+				if(restaurantDetails.getStatus()!=null) {
+					restaurant[i].setStatus(restaurantDetails.getStatus());
+				}
+				restaurantRepository.save(restaurant[i]);
+				
+				RestaurantDto  returnValue = modelMapper.map(restaurant[i], RestaurantDto.class);
+				return returnValue;
+				
+				
+			}
+		}
+		return null;
+	}
+
+
 
 }
  

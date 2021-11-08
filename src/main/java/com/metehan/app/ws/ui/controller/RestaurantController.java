@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.metehan.app.ws.data.model.request.CreateRestaurantReq;
 import com.metehan.app.ws.data.model.request.CreateUserReq;
+import com.metehan.app.ws.data.model.request.UpdateRestaurantReq;
 import com.metehan.app.ws.data.model.response.CreateRestaurantRes;
 import com.metehan.app.ws.data.model.response.CreateUserRes;
+import com.metehan.app.ws.data.model.response.UpdateRestaurantRes;
 import com.metehan.app.ws.service.RestaurantService;
 import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.RestaurantDto;
@@ -29,7 +31,7 @@ import com.metehan.app.ws.shared.UserDto;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/restaurant")
+@RequestMapping("/{userId}/restaurant")
 public class RestaurantController {
 	
 	@Autowired
@@ -41,13 +43,13 @@ public class RestaurantController {
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
 			
 			)
-	public ResponseEntity<CreateRestaurantRes> createRestaurant(@RequestParam(value="userId") String userId ,@Valid @RequestBody CreateRestaurantReq restaurantDetails ) {
+	public ResponseEntity<CreateRestaurantRes> createRestaurant(@PathVariable("userId") String userId, @Valid @RequestBody CreateRestaurantReq restaurantDetails ) {
+		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		
 		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
-		
 		RestaurantDto createdRestaurant = restaurantService.createRestaurant(restaurantDto, userId);
 		
 		CreateRestaurantRes returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes.class);
@@ -56,20 +58,46 @@ public class RestaurantController {
 	}
 	
 	
-	@PutMapping
-	public String updateRestaurant()
+	
+	@PutMapping(
+			path="/{restaurantName}"		
+			)
+	public ResponseEntity<UpdateRestaurantRes> updateRestaurant(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName, @Valid @RequestBody UpdateRestaurantReq restaurantDetails)
 	{
 		
-		return "ufsdfadsfasd";
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
+		RestaurantDto createdRestaurant = restaurantService.updateRestaurant(restaurantDto, userId, restaurantName);
+		
+		UpdateRestaurantRes returnValue = modelMapper.map(createdRestaurant, UpdateRestaurantRes.class);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
 		
 	}
 	
 	
+	
 	@DeleteMapping()
-	public String deleteRestaurant(@RequestParam(value="userId") String userId, @RequestParam(value="restaurantName") String restaurantName) {
+	public String deleteAllRestaurantsofUser(@PathVariable("userId") String userId)
+	{
+		if(restaurantService.deleteAllRestaurants(userId)) {
+			return "All restaurants of  user with id "+userId+" deleted";
+		}
+		return "Unsuccessful operation";
+	}
+	
+	
+	
+
+	@DeleteMapping(
+			path="/{restaurantName}"
+			)
+	public String deleteRestaurant(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName) {
 		
 		if(restaurantService.deleteRestaurant(userId, restaurantName)) {
-			return "Restaurant with name " + restaurantName+" deleted";
+			return "Restaurant with name " + restaurantName+" deleted for user with id "+userId;
 		}
 		
 		return "Unsuccessful operation";
