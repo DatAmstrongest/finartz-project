@@ -126,7 +126,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 		RestaurantEntity[] restaurant = restaurantRepository.findByUserId(user.getId());
 		for(int i=0; i<restaurant.length; i++) {
 			if(restaurant[i].getRestaurantName().equals(restaurantName)) {
-				System.out.println("Hello");
 				if(restaurantDetails.getAddress()!=null) {
 					restaurant[i].setAddress(restaurantDetails.getAddress());
 				}
