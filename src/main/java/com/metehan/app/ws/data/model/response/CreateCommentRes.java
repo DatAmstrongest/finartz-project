@@ -9,11 +9,27 @@ public class CreateCommentRes {
 	 
 	private String content;
 	
+	private String restaurantName;
+	
+	private String userEmail;
 
-	private UserEntity user;
 	
-	private RestaurantEntity restaurant;
-	
+	public String getRestaurantName() {
+		return restaurantName;
+	}
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+
 	private String commentId;
 
 	public int getPoint() {
@@ -32,21 +48,6 @@ public class CreateCommentRes {
 		this.content = content;
 	}
 
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
-
-	public RestaurantEntity getRestaurant() {
-		return restaurant;
-	}
-
-	public void setRestaurant(RestaurantEntity restaurant) {
-		this.restaurant = restaurant;
-	}
 
 	public String getCommentId() {
 		return commentId;
