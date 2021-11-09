@@ -82,7 +82,7 @@ public class RestaurantController {
 	@DeleteMapping()
 	public String deleteAllRestaurantsofUser(@PathVariable("userId") String userId)
 	{
-		if(restaurantService.deleteAllRestaurants(userId)) {
+		if(restaurantService.deleteAllRestaurantsOfUser(userId)) {
 			return "All restaurants of  user with id "+userId+" deleted";
 		}
 		return "Unsuccessful operation";

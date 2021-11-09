@@ -67,4 +67,32 @@ public class CommentServiceImpl implements CommentService{
 		
 	}
 
+
+	@Override
+	public boolean deleteComment(String userId, String restaurantName, String commentId) {
+		
+		UserEntity user = usersRepository.findByUserId(userId);
+		
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		
+		CommentEntity [] comments = commentRepository.findByRestaurantId(restaurant.getId());
+		
+		
+		for(int i = 0; i<comments.length; i++) {
+			System.out.println(comments[i].getCommentId());
+			System.out.println(commentId);
+			if(comments[i].getCommentId().equals(commentId)) {
+				System.out.println("Merhaba");
+				if(comments[i].getUser().getUserId().equals(userId)) {
+					commentRepository.delete(comments[i]);
+					return true;
+					
+				}
+				
+			}
+		}
+				
+		return false;
+	}
+
 }

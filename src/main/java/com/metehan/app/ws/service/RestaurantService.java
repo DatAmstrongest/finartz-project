@@ -7,6 +7,6 @@ public interface RestaurantService {
 	RestaurantDto createRestaurant(RestaurantDto restaurantDetails, String userId);
 	RestaurantDto updateRestaurant(RestaurantDto restaurantDetails, String userId, String restaurantName);
 	boolean deleteRestaurant(String userId, String restaurantName);
-	boolean deleteAllRestaurants(String userId);
+	boolean deleteAllRestaurantsOfUser(String userId);
 
 }

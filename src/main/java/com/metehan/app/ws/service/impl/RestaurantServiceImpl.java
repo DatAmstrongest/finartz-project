@@ -71,7 +71,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public boolean deleteAllRestaurants(String userId) {
+	public boolean deleteAllRestaurantsOfUser(String userId) {
 		
 		UserEntity user = userRepository.findByUserId(userId);
 		RestaurantEntity[] restaurants= restaurantRepository.findByUserId(user.getId());
