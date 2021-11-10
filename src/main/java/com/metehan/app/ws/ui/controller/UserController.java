@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.metehan.app.ws.data.model.request.CreateUserReq;
 import com.metehan.app.ws.data.model.request.UserLogin;
+import com.metehan.app.ws.data.model.response.CreateRestaurantRes;
 import com.metehan.app.ws.data.model.response.CreateUserRes;
 import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.RestaurantDto;
@@ -34,7 +35,42 @@ public class UserController {
 	@Autowired
 	UsersService usersService;
 	
-
+	
+	
+	@GetMapping(
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+			)
+	public ResponseEntity<CreateUserRes[]> getUsers()
+	{
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserDto [] users = usersService.getUsers();
+		
+		CreateUserRes [] returnValue = modelMapper.map(users, CreateUserRes[].class);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
+	
+	@GetMapping(
+			path="{userId}",
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+			)
+	public ResponseEntity<CreateUserRes> getUser(@PathVariable("userId") String userId)
+	{
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserDto users = usersService.getUser(userId);
+		
+		CreateUserRes returnValue = modelMapper.map(users, CreateUserRes.class);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
+	
+	
 	
 	@PostMapping(
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },

@@ -148,6 +148,50 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return null;
 	}
 
+	
+	
+	
+	
+	@Override
+	public RestaurantDto [] getRestaurantsOfUser(String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity  user = userRepository.findByUserId(userId);
+		RestaurantEntity [] restaurants = restaurantRepository.findByUserId(user.getId());
+			
+		RestaurantDto []  returnValue = modelMapper.map(restaurants, RestaurantDto[].class);
+		
+		return returnValue;
+	}
+
+
+	@Override
+	public RestaurantDto getRestaurantOfUser(String restaurantName, String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity  user = userRepository.findByUserId(userId);
+		RestaurantEntity [] restaurants = restaurantRepository.findByUserId(user.getId());
+		
+		for (int i=0; i<restaurants.length; i++) {
+			
+			if (restaurants[i].getRestaurantName().equals(restaurantName))
+			{
+				RestaurantDto returnValue = modelMapper.map(restaurants[i], RestaurantDto.class);
+				return returnValue;
+				
+			}
+			
+		}
+		
+		return null;
+		
+		
+	}
+
 
 
 }

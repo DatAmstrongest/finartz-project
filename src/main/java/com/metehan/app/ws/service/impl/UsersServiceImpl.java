@@ -1,5 +1,7 @@
 package com.metehan.app.ws.service.impl;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.metehan.app.ws.data.model.entity.UserEntity.Role;
 import com.metehan.app.ws.data.model.request.UserLogin;
 
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.metehan.app.ws.data.UsersRepository;
 import com.metehan.app.ws.data.model.entity.UserEntity;
 import com.metehan.app.ws.service.UsersService;
+import com.metehan.app.ws.shared.RestaurantDto;
 import com.metehan.app.ws.shared.UserDto;
 
 
@@ -77,6 +80,34 @@ public class UsersServiceImpl implements UsersService {
 		}
 		
 		return null;
+	}
+    
+	@Override
+	public UserDto getUser(String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity usersIterable = usersRepository.findByUserId(userId);
+		UserDto   returnValue = modelMapper.map(usersIterable, UserDto.class);
+		
+		return returnValue;
+		
+		
+	}
+	
+	@Override
+	public UserDto[] getUsers() {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		Iterable<UserEntity> usersIterable = usersRepository.findAll();
+		UserDto []  returnValue = modelMapper.map(usersIterable, UserDto[].class);
+		
+		return returnValue;
+		
+		
 	}
 	
 

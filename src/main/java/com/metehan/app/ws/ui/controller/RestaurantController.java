@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,7 +38,43 @@ public class RestaurantController {
 	@Autowired
 	RestaurantService restaurantService;
 	
-
+	
+	@GetMapping(
+			path = "{restaurantName}",
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+			)
+	public ResponseEntity<CreateRestaurantRes> getRestaurants(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName)
+	{
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantDto createdRestaurant = restaurantService.getRestaurantOfUser(restaurantName,userId);
+		
+		CreateRestaurantRes returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes.class);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
+	
+	
+	@GetMapping(
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+			)
+	public ResponseEntity<CreateRestaurantRes[]> getRestaurants(@PathVariable("userId") String userId)
+	{
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantDto [] createdRestaurant = restaurantService.getRestaurantsOfUser(userId);
+		
+		CreateRestaurantRes [] returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes[].class);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
+	
+	
+	
 	@PostMapping(
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }

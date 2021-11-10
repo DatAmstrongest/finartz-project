@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity()
 @Table(name="comments")
 public class CommentEntity implements Serializable {
@@ -33,10 +35,12 @@ public class CommentEntity implements Serializable {
 	@Column(nullable=false, length=300)
 	private String content;
 	
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserEntity user;
 	
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "restaurant_id", nullable = false)
 	private RestaurantEntity restaurant;

@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 
 @Entity()
@@ -48,10 +50,12 @@ public class UserEntity implements Serializable {
 	@Column(nullable=false, length=120, unique=true)
 	private String address;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Set<CommentEntity> comments;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Set<RestaurantEntity> restaurants;
