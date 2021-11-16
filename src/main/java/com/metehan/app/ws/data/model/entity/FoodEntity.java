@@ -24,7 +24,7 @@ public class FoodEntity implements Serializable {
 	@GeneratedValue
 	private long id;
 	
-	@Column(nullable=false, unique=true)
+	@Column(nullable=false)
 	private String foodName;
 	
 	@Column(nullable=false, unique=true)

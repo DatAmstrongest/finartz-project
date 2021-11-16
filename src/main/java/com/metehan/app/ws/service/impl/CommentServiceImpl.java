@@ -79,10 +79,7 @@ public class CommentServiceImpl implements CommentService{
 		
 		
 		for(int i = 0; i<comments.length; i++) {
-			System.out.println(comments[i].getCommentId());
-			System.out.println(commentId);
 			if(comments[i].getCommentId().equals(commentId)) {
-				System.out.println("Merhaba");
 				if(comments[i].getUser().getUserId().equals(userId)) {
 					commentRepository.delete(comments[i]);
 					return true;
@@ -94,5 +91,63 @@ public class CommentServiceImpl implements CommentService{
 				
 		return false;
 	}
+
+
+	@Override
+	public CommentDto[] getCommentsOfRestaurant(String restaurantName) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		CommentEntity [] comments = commentRepository.findByRestaurantId(restaurant.getId());
+		
+		CommentDto[] returnValue = modelMapper.map(comments, CommentDto[].class);
+		return returnValue;
+		
+		
+	}
+
+
+	@Override
+	public CommentDto[] getCommentsOfUser(String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity user = usersRepository.findByUserId(userId);
+		CommentEntity [] comments = commentRepository.findByUserId(user.getId());
+		
+		CommentDto[] returnValue = modelMapper.map(comments, CommentDto[].class);
+		return returnValue;
+	}
+
+
+	@Override
+	public CommentDto[] getComment(String commentId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		CommentEntity [] comments = commentRepository.findByCommentId(commentId);
+		
+		CommentDto[] returnValue = modelMapper.map(comments, CommentDto[].class);
+		return returnValue;
+	}
+
+
+	@Override
+	public CommentDto[] getAllComments() {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+	    Iterable<CommentEntity> comments = commentRepository.findAll();
+	    CommentDto[] returnValue = modelMapper.map(comments, CommentDto[].class);
+		
+	    return returnValue;
+	}
+	
+	
 
 }

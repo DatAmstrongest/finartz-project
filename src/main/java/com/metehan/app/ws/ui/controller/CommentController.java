@@ -1,5 +1,7 @@
 package com.metehan.app.ws.ui.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -9,7 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,11 +31,55 @@ import com.metehan.app.ws.shared.RestaurantDto;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/{userId}/{restaurantName}/comments")
+@RequestMapping(value={"/{userId}/{restaurantName}/comments","/{restaurantName}/comments","/{userId}/comments","/comments","/{userId}/{restaurantName}/comments/{commentId}"})
 public class CommentController {
 	
 	@Autowired
 	CommentService commentService;
+	
+	
+	@GetMapping(
+			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
+			)
+	public ResponseEntity<CreateCommentRes[]> getComments(@PathVariable(name="userId", required = false) String userId, @PathVariable(name="restaurantName", required=false) String restaurantName, @PathVariable(name="commentId", required=false) String commentId )
+	{
+		CreateCommentRes [] returnValue ;
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		if(commentId!=null){
+			
+			CommentDto [] comments = commentService.getComment(commentId);
+			returnValue = modelMapper.map(comments, CreateCommentRes[].class);
+			
+			
+		}
+		else if(restaurantName!=null) {
+			
+			
+			CommentDto [] comments = commentService.getCommentsOfRestaurant(restaurantName);
+			returnValue = modelMapper.map(comments, CreateCommentRes[].class);
+			
+		
+		}
+		
+		else if (userId!=null) {
+			
+			CommentDto [] comments = commentService.getCommentsOfUser(userId);
+			returnValue = modelMapper.map(comments, CreateCommentRes[].class);
+			
+			
+		}
+		else
+		{
+			CommentDto [] comments = commentService.getAllComments();
+			returnValue = modelMapper.map(comments, CreateCommentRes[].class);
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
+	
 	
 	@PostMapping(
 			consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },

@@ -52,6 +52,7 @@ public class RestaurantEntity implements Serializable {
 	@Column(nullable=false)
 	private State status;
 	
+	@JsonManagedReference
 	@OneToOne(mappedBy = "restaurant", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
 	private MenuEntity menu;

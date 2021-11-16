@@ -7,19 +7,34 @@ import com.metehan.app.ws.data.model.entity.RestaurantEntity;
 
 public class CreateMenuRes {
 	
-private RestaurantEntity restaurant;
+    
+	private String restaurantName;
 	
 
 	private Set<FoodEntity> foods;
+	
+	private String menuName;
 
 	private String menuId;
+	
+	
 
-	public RestaurantEntity getRestaurant() {
-		return restaurant;
+	public String getMenuName() {
+		return menuName;
 	}
 
-	public void setRestaurant(RestaurantEntity restaurant) {
-		this.restaurant = restaurant;
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
+	}
+
+
+
+	public String getRestaurantName() {
+		return restaurantName;
+	}
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
 	}
 
 	public Set<FoodEntity> getFoods() {

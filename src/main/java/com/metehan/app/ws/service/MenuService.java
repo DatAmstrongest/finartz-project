@@ -4,6 +4,6 @@ import com.metehan.app.ws.shared.MenuDto;
 
 public interface MenuService {
 	
-	MenuDto createMenu(MenuDto menuDetails);
+	MenuDto createMenu(MenuDto menuDetails, String restaurantName);
 
 }

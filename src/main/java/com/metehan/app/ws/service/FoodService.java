@@ -4,6 +4,6 @@ import com.metehan.app.ws.shared.FoodDto;
 
 public interface FoodService {
 	
-	FoodDto createFood(FoodDto foodDetails);
+	FoodDto createFood(FoodDto foodDetails, String restaurantName);
 
 }

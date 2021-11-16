@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity()
 @Table(name="menus")
 public class MenuEntity implements Serializable {
@@ -29,6 +31,7 @@ public class MenuEntity implements Serializable {
 	@GeneratedValue
 	private long id;
 	
+	@JsonBackReference
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private RestaurantEntity restaurant;
@@ -38,6 +41,19 @@ public class MenuEntity implements Serializable {
 	
 	@Column(nullable=false, unique=true)
 	private String menuId;
+	
+	@Column(nullable=false)
+	private String menuName;
+	
+	
+
+	public String getMenuName() {
+		return menuName;
+	}
+
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
+	}
 
 	public long getId() {
 		return id;
@@ -59,8 +75,11 @@ public class MenuEntity implements Serializable {
 		return foods;
 	}
 
-	public void setFoods(Set<FoodEntity> foods) {
-		this.foods = foods;
+	public void setFood(FoodEntity food) {
+		this.foods.add(food);
+	}
+	public void setFoods(Set<FoodEntity> food) {
+		this.foods= food;
 	}
 
 	public String getMenuId() {
