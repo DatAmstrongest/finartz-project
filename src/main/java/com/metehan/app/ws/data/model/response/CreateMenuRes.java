@@ -8,7 +8,7 @@ import com.metehan.app.ws.data.model.entity.RestaurantEntity;
 public class CreateMenuRes {
 	
     
-	private String restaurantName;
+	private String restaurantId;
 	
 
 	private Set<FoodEntity> foods;
@@ -19,6 +19,14 @@ public class CreateMenuRes {
 	
 	
 
+	public String getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(String restaurantId) {
+		this.restaurantId = restaurantId;
+	}
+
 	public String getMenuName() {
 		return menuName;
 	}
@@ -27,15 +35,7 @@ public class CreateMenuRes {
 		this.menuName = menuName;
 	}
 
-
-
-	public String getRestaurantName() {
-		return restaurantName;
-	}
-
-	public void setRestaurantName(String restaurantName) {
-		this.restaurantName = restaurantName;
-	}
+    
 
 	public Set<FoodEntity> getFoods() {
 		return foods;

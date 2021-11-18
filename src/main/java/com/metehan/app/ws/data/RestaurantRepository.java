@@ -8,5 +8,6 @@ import com.metehan.app.ws.data.model.entity.UserEntity;
 
 public interface RestaurantRepository extends CrudRepository<RestaurantEntity, Long> {
 	RestaurantEntity[] findByUserId(Long userId);
+	RestaurantEntity findByRestaurantId(String restaurantId);
 	RestaurantEntity findByRestaurantName(String restaurantName);
 }

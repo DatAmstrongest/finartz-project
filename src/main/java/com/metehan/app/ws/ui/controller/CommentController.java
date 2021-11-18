@@ -31,7 +31,7 @@ import com.metehan.app.ws.shared.RestaurantDto;
 
 @SpringBootApplication
 @RestController
-@RequestMapping(value={"/{userId}/{restaurantName}/comments","/{restaurantName}/comments","/{userId}/comments","/comments","/{userId}/{restaurantName}/comments/{commentId}"})
+@RequestMapping(value={"user/{userId}/comment","/restaurant/{restaurantId}/comment","/{userId}/comment","/comment","user/{userId}/restaurant/{restaurantId}/comment/{commentId}","user/{userId}/restaurant/{restaurantId}/comment"})
 public class CommentController {
 	
 	@Autowired
@@ -41,7 +41,7 @@ public class CommentController {
 	@GetMapping(
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
 			)
-	public ResponseEntity<CreateCommentRes[]> getComments(@PathVariable(name="userId", required = false) String userId, @PathVariable(name="restaurantName", required=false) String restaurantName, @PathVariable(name="commentId", required=false) String commentId )
+	public ResponseEntity<CreateCommentRes[]> getComments(@PathVariable(name="userId", required = false) String userId, @PathVariable(name="restaurantId", required=false) String restaurantId, @PathVariable(name="commentId", required=false) String commentId )
 	{
 		CreateCommentRes [] returnValue ;
 		
@@ -55,10 +55,10 @@ public class CommentController {
 			
 			
 		}
-		else if(restaurantName!=null) {
+		else if(restaurantId!=null) {
 			
 			
-			CommentDto [] comments = commentService.getCommentsOfRestaurant(restaurantName);
+			CommentDto [] comments = commentService.getCommentsOfRestaurant(restaurantId);
 			returnValue = modelMapper.map(comments, CreateCommentRes[].class);
 			
 		
@@ -86,14 +86,15 @@ public class CommentController {
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
 			
 			)
-	public ResponseEntity<CreateCommentRes> createComment(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName , @Valid @RequestBody CreateCommentReq commentDetails ) {
+	public ResponseEntity<CreateCommentRes> createComment(@PathVariable("userId") String userId, @PathVariable("restaurantId") String restaurantId , @Valid @RequestBody CreateCommentReq commentDetails ) {
 		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		
 		CommentDto commentDto = modelMapper.map(commentDetails, CommentDto.class);
-		CommentDto createdComment = commentService.createComment(commentDto, userId, restaurantName);
+		commentDto.setPoint(commentDetails.getPoint());
+		CommentDto createdComment = commentService.createComment(commentDto, userId, restaurantId);
 		
 		if(createdComment==null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
@@ -112,10 +113,10 @@ public class CommentController {
 	@DeleteMapping(
 			path="/{commentId}"
 			)
-	public String deleteComment(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName, @PathVariable("commentId") String commentId) {
+	public String deleteComment(@PathVariable("userId") String userId, @PathVariable("restauranId") String restaurantId, @PathVariable("commentId") String commentId) {
 		
-		if(commentService.deleteComment(userId, restaurantName, commentId)) {
-			return "Comment with id " + commentId+" deleted from restaurant "+ restaurantName +" and user with id "+userId;
+		if(commentService.deleteComment(userId, restaurantId, commentId)) {
+			return "Comment with id " + commentId+" deleted from restaurant "+ restaurantId +" and user with id "+userId;
 		}
 		
 		return "Unsuccessful operation";

@@ -26,18 +26,18 @@ import com.metehan.app.ws.shared.RestaurantDto;
 public class MenuServiceImpl implements MenuService{
 
 	MenuRepository menuRepository;
-	RestaurantRepository restaurantRespository;
+	RestaurantRepository restaurantRepository;
 	
 	@Autowired
 	public MenuServiceImpl(MenuRepository menuRepository, RestaurantRepository restaurantRepository)
 	{
 		this.menuRepository = menuRepository;
-		this.restaurantRespository = restaurantRepository;
+		this.restaurantRepository = restaurantRepository;
 	}
 	
 	@Override
-	public MenuDto createMenu(MenuDto menuDetails, String restaurantName) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	public MenuDto createMenu(MenuDto menuDetails, String restaurantId) {
+
 		menuDetails.setMenuId(UUID.randomUUID().toString());
 		
 		
@@ -45,17 +45,72 @@ public class MenuServiceImpl implements MenuService{
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		MenuEntity menuEntity = modelMapper.map(menuDetails, MenuEntity.class);
-		RestaurantEntity restaurantEntity = restaurantRespository.findByRestaurantName(restaurantName);
+		RestaurantEntity restaurantEntity = restaurantRepository.findByRestaurantId(restaurantId);
+		
+		if(restaurantEntity==null) {
+			return null;
+		}
+		if (restaurantEntity.getStatus()!= State.APPROVED) {
+			return null;
+		}
 		menuEntity.setRestaurant(restaurantEntity);
 		restaurantEntity.setMenu(menuEntity);
 		
 		menuRepository.save(menuEntity);
-		restaurantRespository.save(restaurantEntity);
+		restaurantRepository.save(restaurantEntity);
 	
 		
 		
 		MenuDto  returnValue = modelMapper.map(menuEntity, MenuDto.class);
 		return returnValue;
+		
+	}
+
+	@Override
+	public MenuDto getMenuById(String menuId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		MenuEntity menu = menuRepository.findByMenuId(menuId);
+		
+		MenuDto  returnValue = modelMapper.map(menu, MenuDto.class);
+		
+		return returnValue;
+		
+		
+	}
+
+	@Override
+	public MenuDto getMenuByRestaurantId(String restaurantId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantId(restaurantId);
+		MenuEntity menu = menuRepository.findByRestaurantId(restaurant.getId());
+		
+		MenuDto  returnValue = modelMapper.map(menu, MenuDto.class);
+		
+		return returnValue;
+	}
+
+	@Override
+	public boolean deleteMenu(String menuId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		MenuEntity menu = menuRepository.findByMenuId(menuId);
+		
+		if(menu==null) {
+			return false;
+		}
+		else {
+			menuRepository.delete(menu);
+			return true;
+		}
+		
 		
 	}
 

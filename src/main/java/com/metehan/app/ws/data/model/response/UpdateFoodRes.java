@@ -1,9 +1,6 @@
 package com.metehan.app.ws.data.model.response;
 
-import com.metehan.app.ws.data.model.entity.RestaurantEntity;
-import com.metehan.app.ws.data.model.entity.UserEntity;
-
-public class CreateFoodRes {
+public class UpdateFoodRes {
 	
 	private int foodPrice;
 	 
@@ -41,8 +38,5 @@ public class CreateFoodRes {
 	public void setFoodId(String foodId) {
 		this.foodId = foodId;
 	}
-
-	
-	
 
 }

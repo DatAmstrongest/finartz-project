@@ -16,8 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.metehan.app.ws.data.UsersRepository;
+import com.metehan.app.ws.data.model.entity.FoodEntity;
 import com.metehan.app.ws.data.model.entity.UserEntity;
 import com.metehan.app.ws.service.UsersService;
+import com.metehan.app.ws.shared.FoodDto;
 import com.metehan.app.ws.shared.RestaurantDto;
 import com.metehan.app.ws.shared.UserDto;
 
@@ -107,6 +109,60 @@ public class UsersServiceImpl implements UsersService {
 		
 		return returnValue;
 		
+		
+	}
+
+	@Override
+	public boolean deleteUser(String userId) {
+		
+		UserEntity user = usersRepository.findByUserId(userId);
+		
+		if(user!=null) {
+			
+			usersRepository.delete(user);
+			return true;
+			
+		}
+		else {
+			return false;
+			
+		}
+	}
+
+	@Override
+	public UserDto updateUser(UserDto userDetails, String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity userEntity = usersRepository.findByUserId(userId);
+		
+		if(userDetails.getLastName()!=null) {
+			
+			userEntity.setLastName(userDetails.getLastName());
+			
+		}
+		if (userDetails.getFirstName()!=null) {
+			
+			userEntity.setFirstName(userDetails.getFirstName());
+			
+		}
+		
+		if (userDetails.getAddress()!=null) {
+			userEntity.setAddress(userDetails.getAddress());
+			
+			
+		}
+		
+		if(userDetails.getUserRole()!=null) {
+			userEntity.setUserRole(userDetails.getUserRole());
+			
+		}
+		
+		usersRepository.save(userEntity);
+		
+		UserDto  returnValue = modelMapper.map(userEntity, UserDto.class);
+		return returnValue;
 		
 	}
 	

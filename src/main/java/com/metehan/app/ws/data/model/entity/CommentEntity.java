@@ -87,6 +87,15 @@ public class CommentEntity implements Serializable {
 	public void setCommentId(String commentId) {
 		this.commentId = commentId;
 	}
+
+	public int getPoint() {
+		return point;
+	}
+
+	public void setPoint(int point) {
+		this.point = point;
+	}
+	
 	
 	
 	

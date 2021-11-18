@@ -37,9 +37,9 @@ public class CommentServiceImpl implements CommentService{
 		
 
 	@Override
-	public CommentDto createComment(CommentDto commentDetails, String userId, String restaurantName) {
+	public CommentDto createComment(CommentDto commentDetails, String userId, String restaurantId) {
 		UserEntity user = usersRepository.findByUserId(userId);
-		RestaurantEntity restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantId(restaurantId);
 		
 		if (user==null) {
 			throw new UsernameNotFoundException(userId);
@@ -55,12 +55,14 @@ public class CommentServiceImpl implements CommentService{
 		
 		
 		CommentEntity commentEntity = modelMapper.map(commentDetails, CommentEntity.class);
+		commentEntity.setPoint(commentDetails.getPoint());
 		
 		commentEntity.setUser(user);
 		commentEntity.setRestaurant(restaurant);
 		commentRepository.save(commentEntity);
 		
 		CommentDto  returnValue = modelMapper.map(commentEntity, CommentDto.class);
+		returnValue.setPoint(commentEntity.getPoint());
 		return returnValue;
 		
 		
@@ -69,11 +71,11 @@ public class CommentServiceImpl implements CommentService{
 
 
 	@Override
-	public boolean deleteComment(String userId, String restaurantName, String commentId) {
+	public boolean deleteComment(String userId, String restaurantId, String commentId) {
 		
 		UserEntity user = usersRepository.findByUserId(userId);
 		
-		RestaurantEntity restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantId(restaurantId);
 		
 		CommentEntity [] comments = commentRepository.findByRestaurantId(restaurant.getId());
 		
@@ -94,12 +96,12 @@ public class CommentServiceImpl implements CommentService{
 
 
 	@Override
-	public CommentDto[] getCommentsOfRestaurant(String restaurantName) {
+	public CommentDto[] getCommentsOfRestaurant(String restaurantId) {
 		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
-		RestaurantEntity restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantId(restaurantId);
 		CommentEntity [] comments = commentRepository.findByRestaurantId(restaurant.getId());
 		
 		CommentDto[] returnValue = modelMapper.map(comments, CommentDto[].class);

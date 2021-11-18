@@ -40,15 +40,15 @@ public class RestaurantController {
 	
 	
 	@GetMapping(
-			path = "{restaurantName}",
+			path = "{restaurantId}",
 			produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
 			)
-	public ResponseEntity<CreateRestaurantRes> getRestaurants(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName)
+	public ResponseEntity<CreateRestaurantRes> getRestaurants(@PathVariable("userId") String userId, @PathVariable("restaurantId") String restaurantId)
 	{
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
-		RestaurantDto createdRestaurant = restaurantService.getRestaurantOfUser(restaurantName,userId);
+		RestaurantDto createdRestaurant = restaurantService.getRestaurantOfUser(restaurantId,userId);
 		
 		CreateRestaurantRes returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes.class);
 		
@@ -97,16 +97,16 @@ public class RestaurantController {
 	
 	
 	@PutMapping(
-			path="/{restaurantName}"		
+			path="/{restaurantId}"		
 			)
-	public ResponseEntity<UpdateRestaurantRes> updateRestaurant(@PathVariable("userId") String userId, @PathVariable("restaurantName") String restaurantName, @Valid @RequestBody UpdateRestaurantReq restaurantDetails)
+	public ResponseEntity<UpdateRestaurantRes> updateRestaurant(@PathVariable("userId") String userId, @PathVariable("restaurantId") String restaurantId, @Valid @RequestBody UpdateRestaurantReq restaurantDetails)
 	{
 		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
-		RestaurantDto createdRestaurant = restaurantService.updateRestaurant(restaurantDto, userId, restaurantName);
+		RestaurantDto createdRestaurant = restaurantService.updateRestaurant(restaurantDto, userId, restaurantId);
 		
 		UpdateRestaurantRes returnValue = modelMapper.map(createdRestaurant, UpdateRestaurantRes.class);
 		

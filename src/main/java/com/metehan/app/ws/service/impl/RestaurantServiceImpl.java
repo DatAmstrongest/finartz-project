@@ -96,14 +96,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 	
 	@Override
-	public boolean deleteRestaurant(String userId, String restaurantName) {
+	public boolean deleteRestaurant(String userId, String restaurantId) {
 		
 		UserEntity user = userRepository.findByUserId(userId);
 
 		RestaurantEntity[] restaurant = restaurantRepository.findByUserId(user.getId());
+		RestaurantEntity restaurant1 = restaurantRepository.findByRestaurantId(restaurantId);
 		for(int i=0; i<restaurant.length; i++) {
-			if(restaurant[i].getRestaurantName().equals(restaurantName)) {
-				return true;
+			if(restaurant[i].getRestaurantName().equals(restaurant1.getRestaurantName())) {
+				restaurantRepository.delete(restaurant1);
+			    return true;
 			}
 		}
 		
@@ -112,7 +114,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
 	@Override
-	public RestaurantDto updateRestaurant(RestaurantDto restaurantDetails, String userId, String restaurantName) {
+	public RestaurantDto updateRestaurant(RestaurantDto restaurantDetails, String userId, String restaurantId) {
 		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -124,8 +126,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 		}
 		
 		RestaurantEntity[] restaurant = restaurantRepository.findByUserId(user.getId());
+		RestaurantEntity restaurant1 = restaurantRepository.findByRestaurantId(restaurantId);
 		for(int i=0; i<restaurant.length; i++) {
-			if(restaurant[i].getRestaurantName().equals(restaurantName)) {
+			if(restaurant[i].getRestaurantName().equals(restaurant1.getRestaurantName())) {
 				if(restaurantDetails.getAddress()!=null) {
 					restaurant[i].setAddress(restaurantDetails.getAddress());
 				}
@@ -168,17 +171,18 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
 	@Override
-	public RestaurantDto getRestaurantOfUser(String restaurantName, String userId) {
+	public RestaurantDto getRestaurantOfUser(String restaurantId, String userId) {
 		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		UserEntity  user = userRepository.findByUserId(userId);
 		RestaurantEntity [] restaurants = restaurantRepository.findByUserId(user.getId());
+		RestaurantEntity restaurant1 = restaurantRepository.findByRestaurantId(restaurantId);
 		
 		for (int i=0; i<restaurants.length; i++) {
 			
-			if (restaurants[i].getRestaurantName().equals(restaurantName))
+			if (restaurants[i].getRestaurantName().equals(restaurant1.getRestaurantName()))
 			{
 				RestaurantDto returnValue = modelMapper.map(restaurants[i], RestaurantDto.class);
 				return returnValue;

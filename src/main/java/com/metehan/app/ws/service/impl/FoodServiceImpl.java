@@ -18,6 +18,7 @@ import com.metehan.app.ws.data.model.entity.RestaurantEntity;
 import com.metehan.app.ws.service.FoodService;
 import com.metehan.app.ws.shared.FoodDto;
 import com.metehan.app.ws.shared.MenuDto;
+import com.metehan.app.ws.shared.RestaurantDto;
 
 @Service
 public class FoodServiceImpl implements FoodService {
@@ -36,14 +37,16 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public FoodDto createFood(FoodDto foodDetails,String restaurantName) {
+	public FoodDto createFood(FoodDto foodDetails, String restaurantId) {
 		foodDetails.setFoodId(UUID.randomUUID().toString());
 		
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		FoodEntity foodEntity = modelMapper.map(foodDetails, FoodEntity.class);
-		RestaurantEntity restaurant = restaurantRepository.findByRestaurantName(restaurantName);
+		foodEntity.setFoodPrice(foodDetails.getFoodPrice());
+		
+		RestaurantEntity restaurant = restaurantRepository.findByRestaurantId(restaurantId);
 		MenuEntity menuEntity = menuRepository.findByRestaurantId(restaurant.getId());
 		
 		foodEntity.setMenu(menuEntity);;
@@ -51,7 +54,54 @@ public class FoodServiceImpl implements FoodService {
 		
 		
 		FoodDto  returnValue = modelMapper.map(foodEntity, FoodDto.class);
+		returnValue.setFoodPrice(foodEntity.getFoodPrice());
+		
 		return returnValue;
+	}
+
+	@Override
+	public boolean deleteFood(String foodId) {
+		
+		FoodEntity food = foodRepository.findByFoodId(foodId);
+		
+		if(food!=null) {
+			
+			foodRepository.delete(food);
+			
+			return true;
+		}
+			
+		else {
+			return false;
+			
+		}
+	}
+
+	@Override
+	public FoodDto updateFood(FoodDto foodDetails, String foodId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		FoodEntity foodEntity = foodRepository.findByFoodId(foodId);
+		
+		if(foodDetails.getFoodName()!=null) {
+			
+			foodEntity.setFoodName(foodDetails.getFoodName());
+			
+		}
+		if (foodDetails.getFoodPrice()!=0) {
+			
+			foodEntity.setFoodPrice(foodDetails.getFoodPrice());
+			
+		}
+		
+		foodRepository.save(foodEntity);
+		
+		FoodDto  returnValue = modelMapper.map(foodEntity, FoodDto.class);
+		returnValue.setFoodPrice(foodEntity.getFoodPrice());
+		return returnValue;
+		
 	}
 
 	
