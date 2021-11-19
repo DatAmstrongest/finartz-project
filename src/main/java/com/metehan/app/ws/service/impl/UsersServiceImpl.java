@@ -137,6 +137,9 @@ public class UsersServiceImpl implements UsersService {
 		
 		UserEntity userEntity = usersRepository.findByUserId(userId);
 		
+		if(userEntity==null) {
+			return null;
+		}
 		if(userDetails.getLastName()!=null) {
 			
 			userEntity.setLastName(userDetails.getLastName());
@@ -155,14 +158,21 @@ public class UsersServiceImpl implements UsersService {
 		}
 		
 		if(userDetails.getUserRole()!=null) {
+			
 			userEntity.setUserRole(userDetails.getUserRole());
+
 			
 		}
-		
-		usersRepository.save(userEntity);
-		
-		UserDto  returnValue = modelMapper.map(userEntity, UserDto.class);
-		return returnValue;
+		if(userEntity!=null) {
+			usersRepository.save(userEntity);
+			
+			UserDto  returnValue = modelMapper.map(userEntity, UserDto.class);
+			return returnValue;
+			
+		}
+		else {
+			return null;
+		}
 		
 	}
 	

@@ -41,8 +41,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public RestaurantDto createRestaurant(RestaurantDto restaurantDetails, String userId) {
 
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println(auth.getDetails());
 		restaurantDetails.setRestaurantId(UUID.randomUUID().toString());
 		restaurantDetails.setStatus(State.WAITING);
 		
@@ -53,20 +51,24 @@ public class RestaurantServiceImpl implements RestaurantService {
 		RestaurantEntity restaurantEntity = modelMapper.map(restaurantDetails, RestaurantEntity.class);
 		UserEntity user = userRepository.findByUserId(userId);
 		
+		RestaurantDto returnValue;
 		
 		if (user==null) {
 			throw new UsernameNotFoundException(userId);
 		}
-		user.setUserRole(Role.SELLER);
+		else if (user.getUserRole()==Role.SELLER) {
+			
+			restaurantEntity.setUser(user);
+			restaurantRepository.save(restaurantEntity);
+			returnValue = modelMapper.map(restaurantEntity, RestaurantDto.class);
+			
+		}
+		else {
+			
+			returnValue = null;
+			
+		}
 		
-		restaurantEntity.setUser(user);
-		user.setRestaurants(restaurantEntity);
-		 
-		restaurantRepository.save(restaurantEntity);
-		userRepository.save(user);
-		
-		
-		RestaurantDto  returnValue = modelMapper.map(restaurantEntity, RestaurantDto.class);
 		return returnValue;
 	}
 

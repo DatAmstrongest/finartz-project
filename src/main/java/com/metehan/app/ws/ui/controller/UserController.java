@@ -122,10 +122,18 @@ public class UserController {
 		
 		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 		UserDto user = usersService.updateUser(userDto, userId);
+		;
 		
-		UpdateUserRes returnValue = modelMapper.map(user, UpdateUserRes.class);
+		if(user !=null) {
+			
+			UpdateUserRes returnValue = modelMapper.map(user, UpdateUserRes.class);
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(returnValue);
+			
+		}
+		else {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);	
+		}
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
 	}	
 	
 	@DeleteMapping(

@@ -32,7 +32,7 @@ import com.metehan.app.ws.shared.UserDto;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/{userId}/restaurant")
+@RequestMapping("user/{userId}/restaurant")
 public class RestaurantController {
 	
 	@Autowired
@@ -89,9 +89,15 @@ public class RestaurantController {
 		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
 		RestaurantDto createdRestaurant = restaurantService.createRestaurant(restaurantDto, userId);
 		
+		if(createdRestaurant == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+			
+		}
+		
 		CreateRestaurantRes returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes.class);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(returnValue);
+	
 	}
 	
 	
@@ -108,6 +114,9 @@ public class RestaurantController {
 		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
 		RestaurantDto createdRestaurant = restaurantService.updateRestaurant(restaurantDto, userId, restaurantId);
 		
+		if(createdRestaurant == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
 		UpdateRestaurantRes returnValue = modelMapper.map(createdRestaurant, UpdateRestaurantRes.class);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
