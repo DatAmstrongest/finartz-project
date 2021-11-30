@@ -3,6 +3,11 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CreateUserReq {
 	
 	@NotNull(message="First name cannot be null")
@@ -21,49 +26,14 @@ public class CreateUserReq {
 	@Email
 	private String email;
 	
-	@NotNull(message="Address cannot be null")
-	private String address;
+	@NotNull(message="City name of the user cannot be null")
+	@Size(min=2, max=300, message="City name of the restaurant must not be less than two characters")
+	private String cityName;
+	
+	@NotNull(message="Province name of the province cannot be null")
+	@Size(min=2, max=300, message="Province name of the restaurant must not be less than two characters")
+	private String provinceName;
 	
 	private String userId;
 	
-	
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
 }

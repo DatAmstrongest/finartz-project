@@ -7,6 +7,7 @@ public interface MenuService {
 	MenuDto createMenu(MenuDto menuDetails, String restaurantName);
 	
 	MenuDto getMenuById(String menuId);
+	
 	MenuDto getMenuByRestaurantId(String restaurantId);
 	
 	boolean deleteMenu(String menuId);

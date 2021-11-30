@@ -5,6 +5,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CreateFoodReq {
 	
 	@NotNull(message="Food name cannot be null")
@@ -18,36 +23,5 @@ public class CreateFoodReq {
 	
 	private String foodId;
 
-	public String getFoodName() {
-		return foodName;
-	}
-
-	public void setFoodName(String foodName) {
-		this.foodName = foodName;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
- 
-	public String getFoodId() {
-		return foodId;
-	}
-
-	public void setFoodId(String foodId) {
-		this.foodId = foodId;
-	}
-	
-	
-
-
-	
-	
-	
-	
 
 }

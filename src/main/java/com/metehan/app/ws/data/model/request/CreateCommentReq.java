@@ -5,6 +5,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CreateCommentReq {
 	
 	@NotNull(message="Content cannot be null")
@@ -16,33 +21,6 @@ public class CreateCommentReq {
 	@NotNull(message="Point cannot be null")
 	private int point;
 	
-	private String commentId;
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public int getPoint() {
-		return point;
-	}
-
-	public void setPoint(int point) {
-		this.point = point;
-	}
-
-	public String getCommentId() {
-		return commentId;
-	}
-
-	public void setCommentId(String commentId) {
-		this.commentId = commentId;
-	}
-	
-	
-	
+	private String commentId;	
 
 }

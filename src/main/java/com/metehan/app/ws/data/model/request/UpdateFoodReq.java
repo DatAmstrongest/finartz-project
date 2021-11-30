@@ -4,6 +4,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UpdateFoodReq {
 	
 	@Size(min=2, message="Food name must not be less than two characters")
@@ -13,25 +18,4 @@ public class UpdateFoodReq {
 	@Max(1500)
 	private int foodPrice;
 	
-
-	public String getFoodName() {
-		return foodName;
-	}
-
-	public void setFoodName(String foodName) {
-		this.foodName = foodName;
-	}
-
-	public int getFoodPrice() {
-		return foodPrice;
-	}
-
-	public void setFoodPrice(int foodPrice) {
-		this.foodPrice = foodPrice;
-	}
-	
-	
-
- 
-
 }
