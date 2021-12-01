@@ -1,12 +1,17 @@
 package com.metehan.app.ws.service.impl;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.metehan.app.ws.data.AddressRepository;
 import com.metehan.app.ws.data.RestaurantRepository;
 import com.metehan.app.ws.data.UsersRepository;
+import com.metehan.app.ws.data.model.entity.AddressEntity;
 import com.metehan.app.ws.data.model.entity.RestaurantEntity;
 import com.metehan.app.ws.data.model.entity.RestaurantEntity.State;
 import com.metehan.app.ws.data.model.entity.UserEntity;
@@ -19,22 +24,29 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	private final RestaurantRepository restaurantRepository;
 	private final UsersRepository userRepository;
+	private final AddressRepository addressRepository;
 
-	public RestaurantServiceImpl(RestaurantRepository restaurantRepository, UsersRepository userRepository) {
+	public RestaurantServiceImpl(RestaurantRepository restaurantRepository, UsersRepository userRepository, AddressRepository addressRepository) {
 		this.restaurantRepository = restaurantRepository;
 		this.userRepository = userRepository;
+		this.addressRepository = addressRepository;
 	}
 
 	@Override
-	public RestaurantDto createRestaurant(RestaurantDto restaurantDetails, String userId) {
+	public RestaurantDto createRestaurant(RestaurantDto restaurantDetails, String userId, String addressId) {
 
 		restaurantDetails.setRestaurantId(UUID.randomUUID().toString());
 		restaurantDetails.setStatus(State.WAITING);
 
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		AddressEntity address = addressRepository.findByAddressId(addressId);
 
 		RestaurantEntity restaurantEntity = modelMapper.map(restaurantDetails, RestaurantEntity.class);
+		Set<AddressEntity> addresses = new HashSet<AddressEntity>();
+		addresses.add(address);
+		restaurantEntity.setAddresses(addresses);;
 		UserEntity user = userRepository.findByUserId(userId);
 
 		RestaurantDto returnValue;
@@ -142,6 +154,81 @@ public class RestaurantServiceImpl implements RestaurantService {
 		RestaurantDto[] returnValue = modelMapper.map(restaurants, RestaurantDto[].class);
 
 		return returnValue;
+	}
+	
+	@Override
+	public RestaurantDto[] getCloseCityRestaurants(String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity user = userRepository.findByUserId(userId);
+		AddressEntity[] userAddresses  =user.getAddresses().toArray(new AddressEntity[user.getAddresses().size()]);
+		
+		RestaurantEntity[] restaurants = restaurantRepository.findAll().toArray(new RestaurantEntity[restaurantRepository.findAll().size()]);
+		RestaurantEntity[] matchedRestaurants = new RestaurantEntity [restaurants.length];
+		int counter = 0;
+		for (int r = 0; r<restaurants.length; r++) {
+			
+		    AddressEntity[] restaurantAddresses = restaurants[r].getAddresses().toArray(new AddressEntity[restaurants[r].getAddresses().size()]);
+			
+		    if(restaurants[r].getStatus() == State.APPROVED) {
+		    	
+		    	for (int rAddressIndex = 0; rAddressIndex<restaurantAddresses.length; rAddressIndex++) {
+					
+					for(int uAddressIndex = 0; uAddressIndex<userAddresses.length; uAddressIndex++) {
+						if(restaurantAddresses[rAddressIndex].getCity().getCityName().equals(userAddresses[uAddressIndex].getCity().getCityName())) {
+							matchedRestaurants[counter] = restaurants[r];
+							counter++;
+							break;
+						}
+					}
+							
+				}
+		    	
+		    }
+			
+			
+		}
+		
+		RestaurantDto [] returnValue = modelMapper.map(matchedRestaurants, RestaurantDto[].class);
+		return returnValue;
+		
+	}
+
+	@Override
+	public RestaurantDto[] getCloseProvinceRestaurants(String userId) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity user = userRepository.findByUserId(userId);
+		AddressEntity[] userAddresses  =user.getAddresses().toArray(new AddressEntity[user.getAddresses().size()]);
+		
+		RestaurantEntity[] restaurants = restaurantRepository.findAll().toArray(new RestaurantEntity[restaurantRepository.findAll().size()]);
+		RestaurantEntity[] matchedRestaurants = new RestaurantEntity [restaurants.length];
+		int counter = 0;
+		for (int r = 0; r<restaurants.length; r++) {
+			
+		    AddressEntity[] restaurantAddresses = restaurants[r].getAddresses().toArray(new AddressEntity[restaurants[r].getAddresses().size()]);
+		    if(restaurants[r].getStatus() == State.APPROVED) {
+		    	
+		    	for (int rAddressIndex = 0; rAddressIndex<restaurantAddresses.length; rAddressIndex++) {
+					
+					for(int uAddressIndex = 0; uAddressIndex<userAddresses.length; uAddressIndex++) {
+						if(restaurantAddresses[rAddressIndex].getProvince().getProvinceName().equals(userAddresses[uAddressIndex].getProvince().getProvinceName())) {
+							matchedRestaurants[counter] = restaurants[r];
+							counter++;
+							break;
+						}
+					}			
+				}
+		    }
+		}
+		
+		RestaurantDto [] returnValue = modelMapper.map(matchedRestaurants, RestaurantDto[].class);
+		return returnValue;
+
 	}
 
 }

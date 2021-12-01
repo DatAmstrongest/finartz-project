@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.metehan.app.ws.data.model.response.CreateAddressRes;
-import com.metehan.app.ws.data.model.response.CreateUserRes;
 import com.metehan.app.ws.service.AddressService;
 import com.metehan.app.ws.shared.AddressDto;
-import com.metehan.app.ws.shared.UserDto;
 
 @RestController
 @RequestMapping("/address")

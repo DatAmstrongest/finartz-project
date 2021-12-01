@@ -23,8 +23,13 @@ import com.metehan.app.ws.data.model.request.UpdateRestaurantReq;
 import com.metehan.app.ws.data.model.response.CreateRestaurantRes;
 
 import com.metehan.app.ws.data.model.response.UpdateRestaurantRes;
+import com.metehan.app.ws.service.AddressService;
+import com.metehan.app.ws.service.CityService;
+import com.metehan.app.ws.service.ProvinceService;
 import com.metehan.app.ws.service.RestaurantService;
-
+import com.metehan.app.ws.shared.AddressDto;
+import com.metehan.app.ws.shared.CityDto;
+import com.metehan.app.ws.shared.ProvinceDto;
 import com.metehan.app.ws.shared.RestaurantDto;
 
 @RestController
@@ -32,9 +37,15 @@ import com.metehan.app.ws.shared.RestaurantDto;
 public class RestaurantController {
 
 	private final RestaurantService restaurantService;
+	private final CityService cityService;
+	private final ProvinceService provinceService;
+	private final AddressService addressService;
 	
-	public RestaurantController(RestaurantService restaurantService) {
+	public RestaurantController(RestaurantService restaurantService, CityService cityService, ProvinceService provinceService, AddressService addressService) {
 		this.restaurantService = restaurantService;
+		this.addressService = addressService;
+		this.cityService = cityService;
+		this.provinceService = provinceService;
 	}
 
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -49,6 +60,34 @@ public class RestaurantController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
 
 	}
+	
+	@GetMapping(path="/city",produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<CreateRestaurantRes[]> getCloseCityRestaurants(@RequestParam("user-id") String userId){
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantDto[] createdRestaurant = restaurantService.getCloseCityRestaurants(userId);
+
+		CreateRestaurantRes[] returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes[].class);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
+	
+	@GetMapping(path="/province",produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<CreateRestaurantRes[]> getCloseProvinceRestaurants(@RequestParam("user-id") String userId){
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		RestaurantDto[] createdRestaurant = restaurantService.getCloseProvinceRestaurants(userId);
+
+		CreateRestaurantRes[] returnValue = modelMapper.map(createdRestaurant, CreateRestaurantRes[].class);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
+	}
 
 	@PostMapping(consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<CreateRestaurantRes> createRestaurant(@RequestParam("user-id") String userId,
@@ -56,9 +95,25 @@ public class RestaurantController {
 
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
+		
+		CityDto cityDto = cityService.getCityByName(restaurantDetails.getCityName());
+		if(cityDto == null) {
+			cityDto = new CityDto();
+			cityDto.setCityName(restaurantDetails.getCityName());
+			cityDto = cityService.createCity(cityDto);
+		}
+		
+		ProvinceDto provinceDto = provinceService.getProvinceByName(restaurantDetails.getProvinceName());
+		if(provinceDto == null) {
+			provinceDto = new ProvinceDto();
+			provinceDto.setProvinceName(restaurantDetails.getProvinceName());
+			provinceDto = provinceService.createProvince(provinceDto);
+		}
+		
+		AddressDto createdAddress = addressService.createAddress(cityDto.getCityId(), provinceDto.getProvinceId());
+		
 		RestaurantDto restaurantDto = modelMapper.map(restaurantDetails, RestaurantDto.class);
-		RestaurantDto createdRestaurant = restaurantService.createRestaurant(restaurantDto, userId);
+		RestaurantDto createdRestaurant = restaurantService.createRestaurant(restaurantDto, userId, createdAddress.getAddressId());
 
 		if (createdRestaurant == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

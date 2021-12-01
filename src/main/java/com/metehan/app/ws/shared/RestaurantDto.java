@@ -2,6 +2,7 @@ package com.metehan.app.ws.shared;
 
 import java.util.Set;
 
+import com.metehan.app.ws.data.model.entity.AddressEntity;
 import com.metehan.app.ws.data.model.entity.CommentEntity;
 import com.metehan.app.ws.data.model.entity.MenuEntity;
 import com.metehan.app.ws.data.model.entity.RestaurantEntity.State;
@@ -16,7 +17,7 @@ public class RestaurantDto {
 
 	private String restaurantName;
 
-	private String address;
+	private Set<AddressEntity>addresses;
 
 	private String restaurantId;
 

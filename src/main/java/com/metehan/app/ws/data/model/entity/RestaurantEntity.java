@@ -59,10 +59,12 @@ public class RestaurantEntity implements Serializable {
             cascade = CascadeType.ALL)
     private Set<CommentEntity> comments;
 	
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 	
+	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private Set<AddressEntity> addresses;
 

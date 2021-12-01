@@ -34,4 +34,18 @@ public class ProvinceServiceImpl implements ProvinceService {
 		return returnValue;
 	}
 
+	@Override
+	public ProvinceDto getProvinceByName(String provinceName) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		ProvinceEntity province = provinceRepository.findByProvinceName(provinceName);
+		if(province==null) {
+			return null;
+		}
+		ProvinceDto returnValue = modelMapper.map(province, ProvinceDto.class);
+		return returnValue;
+	}
+
 }

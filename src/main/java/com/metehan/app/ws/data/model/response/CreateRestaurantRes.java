@@ -16,14 +16,14 @@ public class CreateRestaurantRes {
 	
 	private String restaurantName;
 	
-	private String cityName;
-	
-	private Set<AddressEntity> address;
+	private Set<AddressEntity> addresses;
 
 	private State status;
 	
 	private MenuEntity menu;
 
     private Set<CommentEntity> comments;
+    
+    private String restaurantId;
 
 }

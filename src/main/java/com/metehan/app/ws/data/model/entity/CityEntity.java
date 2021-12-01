@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class CityEntity implements Serializable {
 	private String cityName;
 	
 	
-	@JsonManagedReference
+	@JsonBackReference
 	@OneToMany(mappedBy = "city", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Set<AddressEntity> addresses;

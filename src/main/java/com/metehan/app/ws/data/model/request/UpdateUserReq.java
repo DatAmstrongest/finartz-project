@@ -18,8 +18,6 @@ public class UpdateUserReq {
 	
 	@Email
 	private String email;
-	
-	private String address;
 
 	private Role userRole;
 

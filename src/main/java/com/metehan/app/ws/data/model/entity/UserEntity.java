@@ -49,7 +49,7 @@ public class UserEntity implements Serializable {
 	
 	@JsonManagedReference
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	private Set<AddressEntity> address;
+	private Set<AddressEntity> addresses;
 	
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY,

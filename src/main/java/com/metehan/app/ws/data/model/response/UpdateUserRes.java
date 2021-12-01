@@ -1,5 +1,7 @@
 package com.metehan.app.ws.data.model.response;
 
+import java.util.Set;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -24,7 +26,7 @@ public class UpdateUserRes {
 	@Email
 	private String email;
 	
-	private AddressEntity address;
+	private Set<AddressEntity> addresses;
 	
 	@Min(0)
 	@Max(3)

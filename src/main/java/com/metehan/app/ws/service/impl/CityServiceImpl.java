@@ -32,6 +32,21 @@ public class CityServiceImpl implements CityService {
 		
 		CityDto returnValue = modelMapper.map(city, CityDto.class);
 		return returnValue;
+	}
+
+	@Override
+	public CityDto getCityByName(String cityName) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		CityEntity city = cityRepository.findByCityName(cityName);
+		if(city==null) {
+			return null;
+		}
+		CityDto returnValue = modelMapper.map(city, CityDto.class);
+		return returnValue;
+		
 	}	
 
 }

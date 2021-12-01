@@ -1,6 +1,7 @@
 package com.metehan.app.ws.shared;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import com.metehan.app.ws.data.model.entity.AddressEntity;
 import com.metehan.app.ws.data.model.entity.UserEntity.Role;
@@ -20,7 +21,7 @@ public class UserDto implements Serializable {
 	
 	private String email;
 	
-	private AddressEntity address;
+	private Set<AddressEntity> addresses;
 	
 	private String password;
 	

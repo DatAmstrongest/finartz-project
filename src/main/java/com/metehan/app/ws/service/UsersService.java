@@ -17,6 +17,8 @@ public interface UsersService extends UserDetailsService {
 	boolean deleteUser(String userId);
 	
 	UserDto login(UserDto userDetails);
+	
+	UserDto updateUser(String userId, UserDto userDetails);
 
 }
    

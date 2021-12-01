@@ -13,8 +13,11 @@ public class UpdateRestaurantReq {
 	@Size(min=2, message="Restaurant name must not be less than two characters")
 	private String restaurantName;
 	
-	@Size(min=2, max=300, message="Restaurant address must not be less than two characters")
-	private String address;
+	@Size(min=2, message="City name must not be less than two characters")
+	private String cityName;
+	
+	@Size(min=2, message="Province name must not be less than two characters")
+	private String provinceName;
 	
 	private State status;
 

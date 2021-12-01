@@ -1,5 +1,8 @@
 package com.metehan.app.ws.data.model.response;
 
+import com.metehan.app.ws.data.model.entity.CityEntity;
+import com.metehan.app.ws.data.model.entity.ProvinceEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,10 +10,10 @@ import lombok.Setter;
 @Setter
 public class CreateAddressRes {
 	
-	String cityName;
+	private ProvinceEntity province;
 	
-	String provinceName;
+	private CityEntity city;
 	
-	String addressId;
+	private String addressId;
 
 }

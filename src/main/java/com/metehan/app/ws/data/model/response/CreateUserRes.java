@@ -1,5 +1,7 @@
 package com.metehan.app.ws.data.model.response;
 
+import java.util.Set;
+
 import com.metehan.app.ws.data.model.entity.AddressEntity;
 import com.metehan.app.ws.data.model.entity.UserEntity.Role;
 
@@ -16,7 +18,7 @@ public class CreateUserRes {
 	
 	private String email;
 	
-	private AddressEntity address;
+	private Set<AddressEntity> addresses;
 	
 	private String userId;
 	

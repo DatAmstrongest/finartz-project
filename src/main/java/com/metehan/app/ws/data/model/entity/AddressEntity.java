@@ -33,23 +33,22 @@ public class AddressEntity implements Serializable {
 	@GeneratedValue
 	private long id;
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "city_id", nullable = false)
 	private CityEntity city;
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "province_id", nullable = false)
 	private ProvinceEntity province;
 	
-	@JsonManagedReference
+	@JsonBackReference
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable (name = "restaurant_addresses", joinColumns = @JoinColumn(name = "address_id"), inverseJoinColumns = @JoinColumn(name = "restaurant_id"))
 	private Set<RestaurantEntity> restaurants;
-	
 
-	@JsonManagedReference
+	@JsonBackReference
 	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinTable (name = "user_addresses", joinColumns = @JoinColumn(name = "address_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<UserEntity> users;

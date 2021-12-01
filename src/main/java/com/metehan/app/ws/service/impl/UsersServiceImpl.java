@@ -1,6 +1,8 @@
 package com.metehan.app.ws.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.metehan.app.ws.data.model.entity.UserEntity.Role;
 
@@ -40,18 +42,31 @@ public class UsersServiceImpl implements UsersService {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		AddressEntity address = addressRepository.findByAddressId(addressId);
-		
+			
 		userDetails.setUserId(UUID.randomUUID().toString());
 		userDetails.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetails.getPassword()));
 		userDetails.setUserRole(Role.USER);
-		userDetails.setAddress(address);
 
 		UserEntity userEntity = modelMapper.map(userDetails, UserEntity.class);
-
+		Set<AddressEntity> addresses = new HashSet<AddressEntity>();
+		addresses.add(address);
+		userEntity.setAddresses(addresses);
 		usersRepository.save(userEntity);
 
 		UserDto returnValue = modelMapper.map(userEntity, UserDto.class);
 		return returnValue;
+	}
+	
+	@Override
+	public UserDto login(UserDto userDetails) {
+
+		String userEmail = userDetails.getEmail();
+		UserEntity user = usersRepository.findByEmail(userEmail);
+		if (bCryptPasswordEncoder.matches(userDetails.getPassword(), user.getEncryptedPassword())) {
+			return new ModelMapper().map(user, UserDto.class);
+		}
+
+		return null;
 	}
 
 	@Override
@@ -72,18 +87,6 @@ public class UsersServiceImpl implements UsersService {
 		if (userEntity == null)
 			throw new UsernameNotFoundException(email);
 		return new ModelMapper().map(userEntity, UserDto.class);
-	}
-
-	@Override
-	public UserDto login(UserDto userDetails) {
-
-		String userEmail = userDetails.getEmail();
-		UserEntity user = usersRepository.findByEmail(userEmail);
-		if (bCryptPasswordEncoder.matches(userDetails.getPassword(), user.getEncryptedPassword())) {
-			return new ModelMapper().map(user, UserDto.class);
-		}
-
-		return null;
 	}
 
 	@Override
@@ -128,5 +131,42 @@ public class UsersServiceImpl implements UsersService {
 		}
 	}
 
+	@Override
+	public UserDto updateUser(String userId, UserDto userDetails) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserEntity user = usersRepository.findByUserId(userId);
+		
+		if(userDetails.getEmail()!=null) {
+			
+			user.setEmail(userDetails.getEmail());
+			
+		}
+		
+		if (userDetails.getFirstName()!=null) {
+			
+			user.setFirstName(userDetails.getFirstName());	
+			
+		}
+		
+		if(userDetails.getLastName()!=null) {
+			
+			user.setLastName(userDetails.getLastName());
+			
+		}
+		
+		if(userDetails.getUserRole()!=null) {
+			
+			user.setUserRole(userDetails.getUserRole());
+			
+		}
+		
+		usersRepository.save(user);
+		UserDto returnValue = modelMapper.map(user,UserDto.class);
+		return returnValue;
+		
+	}
 
 }

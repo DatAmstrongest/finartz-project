@@ -11,13 +11,9 @@ import com.metehan.app.ws.data.CityRepository;
 import com.metehan.app.ws.data.ProvinceRepository;
 import com.metehan.app.ws.data.model.entity.AddressEntity;
 import com.metehan.app.ws.data.model.entity.CityEntity;
-import com.metehan.app.ws.data.model.entity.CommentEntity;
 import com.metehan.app.ws.data.model.entity.ProvinceEntity;
-import com.metehan.app.ws.data.model.response.CreateAddressRes;
 import com.metehan.app.ws.service.AddressService;
 import com.metehan.app.ws.shared.AddressDto;
-import com.metehan.app.ws.shared.CityDto;
-import com.metehan.app.ws.shared.CommentDto;
 
 @Service
 public class AddressServiceImpl implements AddressService {

@@ -78,15 +78,21 @@ public class UserController {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
-		CityDto cityDto = new CityDto();
-		cityDto.setCityName(userDetails.getCityName());
-		CityDto createdCity = cityService.createCity(cityDto);
+		CityDto cityDto = cityService.getCityByName(userDetails.getCityName());
+		if(cityDto == null) {
+			cityDto = new CityDto();
+			cityDto.setCityName(userDetails.getCityName());
+			cityDto = cityService.createCity(cityDto);
+		}
 		
-		ProvinceDto provinceDto = new ProvinceDto();
-		provinceDto.setProvinceName(userDetails.getProvinceName());
-		ProvinceDto createdProvince = provinceService.createProvince(provinceDto);
+		ProvinceDto provinceDto = provinceService.getProvinceByName(userDetails.getProvinceName());
+		if(provinceDto == null) {
+			provinceDto = new ProvinceDto();
+			provinceDto.setProvinceName(userDetails.getProvinceName());
+			provinceDto = provinceService.createProvince(provinceDto);
+		}
 		
-		AddressDto createdAddress = addressService.createAddress(createdCity.getCityId(), createdProvince.getProvinceId());
+		AddressDto createdAddress = addressService.createAddress(cityDto.getCityId(), provinceDto.getProvinceId());
 
 		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 		UserDto createdUser = usersService.createUser(userDto, createdAddress.getAddressId());
@@ -109,7 +115,8 @@ public class UserController {
 		}
 		return "Login successful";
 	}
-    /*
+    
+	
 	@PutMapping(path = "/{user-id}")
 	public ResponseEntity<UpdateUserRes> updateUser(@PathVariable("user-id") String userId,
 			@Valid @RequestBody UpdateUserReq userDetails) {
@@ -118,8 +125,7 @@ public class UserController {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
 		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
-		UserDto user = usersService.updateUser(userDto, userId);
-		;
+		UserDto user = usersService.updateUser(userId,userDto);
 
 		if (user != null) {
 
@@ -131,7 +137,6 @@ public class UserController {
 		}
 
 	}
-	*/
 
 	@DeleteMapping(path = "/{user-id}")
 	public String deleteUser(@PathVariable("user-id") String userId) {

@@ -1,5 +1,6 @@
 package com.metehan.app.ws.data.model.response;
 
+import com.metehan.app.ws.data.model.entity.AddressEntity;
 import com.metehan.app.ws.data.model.entity.RestaurantEntity.State;
 
 import lombok.Getter;
@@ -11,7 +12,7 @@ public class UpdateRestaurantRes {
 	
 	private String restaurantName;
 	
-	private String address;
+	private AddressEntity address;
 	
 	private State status;
 	
