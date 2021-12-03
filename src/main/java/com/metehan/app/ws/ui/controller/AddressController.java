@@ -48,7 +48,6 @@ public class AddressController {
 		
 	}
 	
-	
 	@GetMapping(path = "/{address-id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<CreateAddressRes> getAddress(@PathVariable("address-id") String addressId){
 		
