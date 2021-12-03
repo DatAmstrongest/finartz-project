@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import com.metehan.app.ws.data.model.entity.AddressEntity;
+import com.metehan.app.ws.data.model.entity.RestaurantEntity;
 import com.metehan.app.ws.data.model.entity.UserEntity.Role;
 
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class UserDto implements Serializable {
 	private String email;
 	
 	private Set<AddressEntity> addresses;
+	
+	private Set<RestaurantEntity> restaurants;
 	
 	private String password;
 	

@@ -22,12 +22,8 @@ import com.metehan.app.ws.data.model.request.UserLogin;
 import com.metehan.app.ws.data.model.response.CreateUserRes;
 import com.metehan.app.ws.data.model.response.UpdateUserRes;
 import com.metehan.app.ws.service.AddressService;
-import com.metehan.app.ws.service.CityService;
-import com.metehan.app.ws.service.ProvinceService;
 import com.metehan.app.ws.service.UsersService;
 import com.metehan.app.ws.shared.AddressDto;
-import com.metehan.app.ws.shared.CityDto;
-import com.metehan.app.ws.shared.ProvinceDto;
 import com.metehan.app.ws.shared.UserDto;
 
 @RestController
@@ -35,14 +31,11 @@ import com.metehan.app.ws.shared.UserDto;
 public class UserController {
 
 	private final UsersService usersService;
-	private final CityService cityService;
-	private final ProvinceService provinceService;
 	private final AddressService addressService;
 	
-	public UserController(UsersService usersService, CityService cityService, ProvinceService provinceService, AddressService addressService) {
+	public UserController(UsersService usersService, AddressService addressService) {
+		
 		this.usersService = usersService;
-		this.cityService = cityService;
-		this.provinceService = provinceService;
 		this.addressService = addressService;
 		
 	}
@@ -78,27 +71,15 @@ public class UserController {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
-		CityDto cityDto = cityService.getCityByName(userDetails.getCityName());
-		if(cityDto == null) {
-			cityDto = new CityDto();
-			cityDto.setCityName(userDetails.getCityName());
-			cityDto = cityService.createCity(cityDto);
-		}
 		
-		ProvinceDto provinceDto = provinceService.getProvinceByName(userDetails.getProvinceName());
-		if(provinceDto == null) {
-			provinceDto = new ProvinceDto();
-			provinceDto.setProvinceName(userDetails.getProvinceName());
-			provinceDto = provinceService.createProvince(provinceDto);
-		}
-		
-		AddressDto createdAddress = addressService.createAddress(cityDto.getCityId(), provinceDto.getProvinceId());
+		AddressDto createdAddress = addressService.createAddress(userDetails.getAddress());
 
 		UserDto userDto = modelMapper.map(userDetails, UserDto.class);
 		UserDto createdUser = usersService.createUser(userDto, createdAddress.getAddressId());
 		CreateUserRes returnValue = modelMapper.map(createdUser, CreateUserRes.class);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+		
 	}
 
 	@PostMapping(path = "/login", consumes = { MediaType.APPLICATION_XML_VALUE,

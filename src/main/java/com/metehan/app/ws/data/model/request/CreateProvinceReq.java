@@ -11,7 +11,7 @@ import lombok.Setter;
 public class CreateProvinceReq {
 	
 		
-	@NotNull(message="Content cannot be null")
+	@NotNull(message="Province name cannot be null")
 	@Size(max=20)
 	private String provinceName;
 

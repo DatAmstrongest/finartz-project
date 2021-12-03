@@ -26,14 +26,7 @@ public class CreateUserReq {
 	@Email
 	private String email;
 	
-	@NotNull(message="City name of the user cannot be null")
-	@Size(min=2, max=300, message="City name of the restaurant must not be less than two characters")
-	private String cityName;
-	
-	@NotNull(message="Province name of the province cannot be null")
-	@Size(min=2, max=300, message="Province name of the restaurant must not be less than two characters")
-	private String provinceName;
-	
-	private String userId;
-	
+	@NotNull(message="Address cannot be null")
+	private CreateAddressReq address;
+		
 }

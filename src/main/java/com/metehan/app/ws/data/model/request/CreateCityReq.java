@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class CreateCityReq {
 	
-	@NotNull(message="Content cannot be null")
+	@NotNull(message="City name cannot be null")
 	@Size(max=20)
 	private String cityName;
 

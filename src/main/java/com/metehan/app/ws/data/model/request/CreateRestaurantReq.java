@@ -13,13 +13,8 @@ public class CreateRestaurantReq {
 	@Size(min=2, max=100, message="Restaurant name must not be less than two characters")
 	private String restaurantName;
 	
-	@NotNull(message="City name of the restaurant cannot be null")
-	@Size(min=2, max=300, message="City name of the restaurant must not be less than two characters")
-	private String cityName;
-	
-	@NotNull(message="Province name of the restaurant cannot be null")
-	@Size(min=2, max=300, message="Province name of the restaurant must not be less than two characters")
-	private String provinceName;
+	@NotNull(message="Address cannot be null")
+	private CreateAddressReq address;
 	
 	private String restaurantId;
 
